@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faUnlockAlt } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -13,11 +13,28 @@ import {
 import BgImage from '../assets/img/illustrations/signin.svg';
 import { Link } from 'react-router-dom';
 import { Routes } from '../routes';
-
+import axios from 'axios';
 const App = () => {
+  const [Username, setUsername] = useState('test');
+  const [Password, setPassword] = useState('test');
   useEffect(() => {
     document.title = 'Log In';
   }, []);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .post('http://localhost:8080/api/auth/signin', {
+        username: Username,
+        password: Password,
+      })
+      .then(res => {
+        window.location = "/dashboard/transaction"
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   return (
     <main>
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
@@ -44,6 +61,7 @@ const App = () => {
                         required
                         type="email"
                         placeholder="example@klhealthcare.net"
+                        onChange={e => setUsername(e.target.value)}
                       />
                     </InputGroup>
                   </Form.Group>
@@ -58,6 +76,7 @@ const App = () => {
                           required
                           type="password"
                           placeholder="Password"
+                          onChange={e => setPassword(e.target.value)}
                         />
                       </InputGroup>
                     </Form.Group>
@@ -76,8 +95,7 @@ const App = () => {
                     variant="primary"
                     type="submit"
                     className="w-100"
-                    as={Link}
-                    to={Routes.Transactions.path}>
+                    onClick={handleSubmit}>
                     Sign in
                   </Button>
                 </Form>

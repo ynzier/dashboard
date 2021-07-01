@@ -41,8 +41,8 @@ import Toasts from './components/Toasts';
 
 //deploy
 import SignInDeploy from '../deploy/Signin';
-import AddItem from '../deploy/AddItem'
-import Transactions from '../deploy/Transactions'
+import AddItem from '../deploy/AddItem';
+import Transactions from '../deploy/Transactions';
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -91,10 +91,16 @@ const RouteWithSidebar = ({ component: Component, ...rest }) => {
 };
 
 const App = () => {
+  const [token, setToken] = useState();
+
+  if (!token) {
+    return <Signin setToken={setToken} />;
+  }
+
   return (
     <Switch>
       <RouteWithLoader exact path={Routes.Signin.path} component={Signin} />
-       <RouteWithLoader
+      <RouteWithLoader
         exact
         path={Routes.NotFound.path}
         component={NotFoundPage}
@@ -201,11 +207,7 @@ const App = () => {
         path={Routes.Transactions.path}
         component={Transactions}
       />
-      <RouteWithSidebar
-        exact
-        path={Routes.AddItem.path}
-        component={AddItem}
-      />
+      <RouteWithSidebar exact path={Routes.AddItem.path} component={AddItem} />
       <Redirect to={Routes.NotFound.path} />
     </Switch>
   );
