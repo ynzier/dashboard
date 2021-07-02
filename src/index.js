@@ -24,11 +24,11 @@ import './scss/volt.scss';
 import '@fortawesome/fontawesome-free/css/all.css';
 import 'react-datetime/css/react-datetime.css';
 
-import HomePage from './pages/HomePage';
+import App from './App';
 
 ReactDOM.render(
   <BrowserRouter>
-    <HomePage />
+    <App />
   </BrowserRouter>,
   document.getElementById('root'),
 );

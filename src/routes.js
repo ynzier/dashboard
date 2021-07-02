@@ -46,6 +46,6 @@ export const Routes = {
 
   // deployment
   KlSignin: { path: '/' },
-  Transactions: { path: '/dashboard/transaction' },
+  Transactions: { path: '/dashboard' },
   AddItem: { path: '/dashboard/additem' },
 };

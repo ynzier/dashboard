@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faUnlockAlt } from '@fortawesome/free-solid-svg-icons';
@@ -11,28 +12,34 @@ import {
   InputGroup,
 } from '@themesberg/react-bootstrap';
 import BgImage from '../assets/img/illustrations/signin.svg';
-import { Link } from 'react-router-dom';
-import { Routes } from '../routes';
-import axios from 'axios';
-const App = () => {
-  const [Username, setUsername] = useState('test');
-  const [Password, setPassword] = useState('test');
+import AuthService from '../services/auth.service';
+
+const App = ({ setToken }) => {
+  const [Username, setUsername] = useState('');
+  const [Password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
   useEffect(() => {
     document.title = 'Log In';
   }, []);
-  const handleSubmit = (e) => {
+
+  const handleLogin = e => {
     e.preventDefault();
-    axios
-      .post('http://localhost:8080/api/auth/signin', {
-        username: Username,
-        password: Password,
-      })
-      .then(res => {
-        window.location = "/dashboard/transaction"
-      })
-      .catch(err => {
-        console.log(err);
-      });
+
+    AuthService.login(Username, Password).then(
+      () => {
+        window.location = '/dashboard';
+      },
+      error => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        setMessage(resMessage);
+      },
+    );
   };
 
   return (
@@ -49,7 +56,7 @@ const App = () => {
                 <div className="text-center text-md-center mb-4 mt-md-0">
                   <h3 className="mb-0">Sign in to our platform</h3>
                 </div>
-                <Form className="mt-4">
+                <Form className="mt-4" onSubmit={handleLogin}>
                   <Form.Group id="email" className="mb-4">
                     <Form.Label>Your Account</Form.Label>
                     <InputGroup>
@@ -91,11 +98,14 @@ const App = () => {
                       </Form.Check>
                     </div>
                   </Form.Group>
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    className="w-100"
-                    onClick={handleSubmit}>
+                  {message && (
+                    <div className="form-group">
+                      <div className="alert alert-danger" role="alert">
+                        {message}
+                      </div>
+                    </div>
+                  )}
+                  <Button variant="primary" type="submit" className="w-100">
                     Sign in
                   </Button>
                 </Form>
