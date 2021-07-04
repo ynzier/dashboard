@@ -57,6 +57,7 @@ export const GeneralInfoForm = () => {
   return (
     <Card border="light" className="bg-white shadow-sm mb-4">
       <Card.Body>
+        <Form onSubmit={handleSubmit}>
         <h5 className="my-4">ข้อมูลลูกค้า / Customer Info</h5>
         <Row>
           <Col md={6} className="mb-3">
@@ -104,7 +105,7 @@ export const GeneralInfoForm = () => {
           </Col>
         </Row>
         <h5 className="mb-4">ข้อมูลสินค้า / Goods Info</h5>
-        <Form>
+      
           <Row>
             <Col md={4} className="mb-3">
               <Form.Group id="modelID">
@@ -215,7 +216,7 @@ export const GeneralInfoForm = () => {
             </Col>
           </Row>
           <div className="mt-3">
-            <Button variant="primary" type="submit" onClick={handleSubmit}>
+            <Button variant="primary" type="submit">
               Add
             </Button>
           </div>
