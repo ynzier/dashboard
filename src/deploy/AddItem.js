@@ -25,7 +25,7 @@ const App = () => {
         </div>
       </div>
       <Row>
-        <Col xs={12} xl={8}>
+        <Col xs={12} xl={9}>
           <GeneralInfoForm />
         </Col>
       </Row>

@@ -18,62 +18,65 @@ import Transactions from './deploy/Transactions';
 
 import AuthService from './services/auth.service';
 
-const RouteWithLoader = ({ component: Component, ...rest }) => {
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoaded(true), 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  return (
-    <Route
-      {...rest}
-      render={props => (
-        <>
-          <Preloader show={loaded ? false : true} /> <Component {...props} />
-        </>
-      )}
-    />
-  );
-};
-
-const RouteWithSidebar = ({ component: Component, ...rest }) => {
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoaded(true), 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  return (
-    <Route
-      {...rest}
-      render={props => (
-        <>
-          <Preloader show={loaded ? false : true} />
-          <Sidebar />
-
-          <main className="content">
-            <Navbar />
-            <Component {...props} />
-          </main>
-        </>
-      )}
-    />
-  );
-};
-
 const App = () => {
-  const [currentUser, setcurrentUser] = useState('');
+  const [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser());
   console.log(currentUser);
   useEffect(() => {
     const user = AuthService.getCurrentUser();
-    if (user) {
-      setcurrentUser(user);
+
+    if (!currentUser && user) {
+      setCurrentUser(user);
     }
-    
   }, []);
+  const logOut = () => {
+    AuthService.logout();
+  };
+  const RouteWithLoader = ({ component: Component, ...rest }) => {
+    const [loaded, setLoaded] = useState(false);
+
+    useEffect(() => {
+      const timer = setTimeout(() => setLoaded(true), 1000);
+      return () => clearTimeout(timer);
+    }, []);
+
+    return (
+      <Route
+        {...rest}
+        render={props => (
+          <>
+          {currentUser && (window.location = '/dashboard')}
+            <Preloader show={loaded ? false : true} /> <Component {...props} />
+          </>
+        )}
+      />
+    );
+  };
+  const RouteWithSidebar = ({ component: Component, ...rest }) => {
+    const [loaded, setLoaded] = useState(false);
+
+    useEffect(() => {
+      const timer = setTimeout(() => setLoaded(true), 1000);
+      return () => clearTimeout(timer);
+    }, []);
+
+    return (
+      <Route
+        {...rest}
+        render={props => (
+          <>
+            {!currentUser && (window.location = '/')}
+            <Preloader show={loaded ? false : true} />
+            <Sidebar />
+
+            <main className="content">
+              <Navbar />
+              <Component {...props} />
+            </main>
+          </>
+        )}
+      />
+    );
+  };
 
   return (
     <>

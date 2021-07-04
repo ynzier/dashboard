@@ -23,18 +23,20 @@ import {
   Navbar,
   Dropdown,
   Container,
+  Button,
   ListGroup,
 } from '@themesberg/react-bootstrap';
 
 import NOTIFICATIONS_DATA from '../data/notifications';
 import Profile3 from '../assets/img/team/icon.png';
+import AuthService from '../services/auth.service';
 
 export default props => {
   const [notifications, setNotifications] = useState(NOTIFICATIONS_DATA);
-  const areNotificationsRead = notifications.reduce(
-    (acc, notif) => acc && notif.read,
-    true,
-  );
+
+  const logOut = () => {
+    AuthService.logout();
+  };
 
   const markNotificationsAsRead = () => {
     setTimeout(() => {
@@ -84,25 +86,35 @@ export default props => {
                     src={Profile3}
                     className="user-avatar md-avatar rounded-circle"
                   />
+                  &nbsp;&nbsp;
                   <div className="media-body ms-2 text-dark align-items-center d-none d-lg-block">
-                    <span className="mb-0 font-small fw-bold">
-                      Bonnie Green
-                    </span>
+                    <Button>
+                      <span
+                        className="mb-0 font-small fw-bold"
+                        style={{ color: 'white' }}>
+                        KLHealthcare
+                      </span>
+                    </Button>
                   </div>
                 </div>
               </Dropdown.Toggle>
               <Dropdown.Menu className="user-dropdown dropdown-menu-right mt-2">
-                <Dropdown.Item className="fw-bold">
-                  <FontAwesomeIcon icon={faCheckSquare} className="me-2" />{' '}
+                <Dropdown.Item className="fw-bold" href="https://warranty.klhealthcare.net">
+                  <FontAwesomeIcon icon={faCheckSquare} className="me-2" />
                   เว็บเช็คประกัน
                 </Dropdown.Item>
                 <Dropdown.Divider />
 
-                <Dropdown.Item className="fw-bold">
+                <Dropdown.Item
+                  className="fw-bold"
+                  onClick={() => {
+                    logOut();
+                    window.location = '/';
+                  }}>
                   <FontAwesomeIcon
                     icon={faSignOutAlt}
                     className="text-danger me-2"
-                  />{' '}
+                  />
                   Logout
                 </Dropdown.Item>
               </Dropdown.Menu>
