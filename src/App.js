@@ -20,7 +20,6 @@ import AuthService from './services/auth.service';
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser());
-  console.log(currentUser);
   useEffect(() => {
     const user = AuthService.getCurrentUser();
 
@@ -28,9 +27,6 @@ const App = () => {
       setCurrentUser(user);
     }
   }, []);
-  const logOut = () => {
-    AuthService.logout();
-  };
   const RouteWithLoader = ({ component: Component, ...rest }) => {
     const [loaded, setLoaded] = useState(false);
 
