@@ -1,27 +1,8 @@
 {
-  "name": "@themesberg/volt-react-dashboard",
-  "description": "Volt React Dashboard is a free and open source admin dashboard template powered by React.js and Bootstrap 5",
-  "author": "Themesberg",
-  "keywords": [
-    "bootstrap 5",
-    "react",
-    "react dashboard",
-    "react admin template",
-    "free react",
-    "react ui library",
-    "react bootstrap 5",
-    "bootstrap 5 dashboard",
-    "themesberg"
-  ],
+  "name": "kldashboard",
+  "author": "Kunut",
   "license": "MIT",
   "homepage": ".",
-  "bugs": {
-    "url": "https://github.com/themesberg/volt-react-dashboard/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/themesberg/volt-react-dashboard"
-  },
   "version": "1.0.0",
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
@@ -56,13 +37,14 @@
     "react-scripts": "^4.0.3",
     "react-table": "^7.7.0",
     "react-transition-group": "^4.4.1",
-    "simplebar-react": "^2.3.0"
+    "simplebar-react": "^2.3.0",
+    "trim-newlines": "^4.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "build-local": "PUBLIC_URL=./ react-scripts build",
-    "test": "react-scripts test",
+    "test": "snyk test && react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -86,6 +68,7 @@
     ]
   },
   "devDependencies": {
-    "babel-plugin-import": "^1.13.3"
+    "babel-plugin-import": "^1.13.3",
+    "snyk": "^1.657.0"
   }
 }

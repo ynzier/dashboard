@@ -1,9 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faHome,
-  faSearch,
-} from '@fortawesome/free-solid-svg-icons';
+import { faHome, faSearch } from '@fortawesome/free-solid-svg-icons';
 import {
   Col,
   Row,
@@ -17,7 +14,7 @@ import 'antd/dist/antd.css';
 
 import CustomerDataService from '../services/customer.service';
 
-const App = (props) => {
+const App = props => {
   const [record, setRecord] = useState([]);
   const [filterData, setfilterData] = useState();
   const tutorialsRef = useRef();
@@ -103,7 +100,7 @@ const App = (props) => {
       dataIndex: 'key',
       render: (text, record) => {
         const id = record._id;
-        
+
         return (
           <div>
             <span
@@ -131,11 +128,10 @@ const App = (props) => {
           <Breadcrumb
             className="d-none d-md-inline-block"
             listProps={{ className: 'breadcrumb-dark breadcrumb-transparent' }}>
-            <Breadcrumb.Item>
+            <Breadcrumb.Item active>
               <FontAwesomeIcon icon={faHome} />
             </Breadcrumb.Item>
-            <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-            <Breadcrumb.Item active>Transactions</Breadcrumb.Item>
+            <Breadcrumb.Item active>Dashboard</Breadcrumb.Item>
           </Breadcrumb>
         </div>
       </div>

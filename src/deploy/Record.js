@@ -30,10 +30,10 @@ const App = props => {
           <Breadcrumb
             className="d-none d-md-inline-block"
             listProps={{ className: 'breadcrumb-dark breadcrumb-transparent' }}>
-            <Breadcrumb.Item>
+            <Breadcrumb.Item active>
               <FontAwesomeIcon icon={faHome} />
             </Breadcrumb.Item>
-            <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
+            <Breadcrumb.Item href='/dashboard'>Dashboard</Breadcrumb.Item>
             <Breadcrumb.Item active>Edit</Breadcrumb.Item>
           </Breadcrumb>
         </div>

@@ -27,7 +27,6 @@ export const EditForm = props => {
   const [invoiceID, setInvoiceID] = useState();
   const [modelID, setModelID] = useState();
   const [purchaseDate, setPurchaseDate] = useState();
-  const [expiredDate, setExpiredDate] = useState();
   const [status, setStatus] = useState();
 
   useEffect(() => {
@@ -39,7 +38,6 @@ export const EditForm = props => {
       setSerialID(record.serialID);
       setTel(record.tel);
       setWarrantyTime(record.warrantyTime);
-      setExpiredDate(record.expiredDate);
       setInvoiceID(record.invoiceID);
       setStatus(record.status);
       setAddress(record.address);
@@ -126,22 +124,7 @@ export const EditForm = props => {
               </Col>
             </Row>
             <Row>
-              <Col md={6} className="mb-3">
-                <Form.Group id="phone">
-                  <Form.Label>เบอร์ติดต่อ</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    placeholder="เบอร์ติดต่อ"
-                    value={tel}
-                    onChange={e => setTel(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <h5 className="my-4">ที่อยู่ / Address Info</h5>
-            <Row>
-              <Col sm={10} className="mb-4">
+              <Col sm={10} className="mb-3">
                 <Form.Group id="address">
                   <Form.Label>ที่อยู่</Form.Label>
                   <Form.Control
@@ -152,6 +135,20 @@ export const EditForm = props => {
                     style={{ resize: 'none' }}
                     value={address}
                     onChange={e => setAddress(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6} className="mb-3">
+                <Form.Group id="phone">
+                  <Form.Label>เบอร์ติดต่อ</Form.Label>
+                  <Form.Control
+                    required
+                    type="text"
+                    placeholder="เบอร์ติดต่อ"
+                    value={tel}
+                    onChange={e => setTel(e.target.value)}
                   />
                 </Form.Group>
               </Col>

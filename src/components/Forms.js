@@ -117,22 +117,7 @@ export const GeneralInfoForm = () => {
             </Col>
           </Row>
           <Row>
-            <Col md={6} className="mb-3">
-              <Form.Group id="phone">
-                <Form.Label>เบอร์ติดต่อ</Form.Label>
-                <Form.Control
-                  required
-                  type="text"
-                  placeholder="เบอร์ติดต่อ"
-                  name="tel"
-                  onChange={handleInputChange}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <h5 className="my-4">ที่อยู่ / Address Info</h5>
-          <Row>
-            <Col sm={10} className="mb-4">
+            <Col sm={10} className="mb-3">
               <Form.Group id="address">
                 <Form.Label>ที่อยู่</Form.Label>
                 <Form.Control
@@ -142,6 +127,20 @@ export const GeneralInfoForm = () => {
                   placeholder="กรอกที่อยู่"
                   style={{ resize: 'none' }}
                   name="address"
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6} className="mb-3">
+              <Form.Group id="phone">
+                <Form.Label>เบอร์ติดต่อ</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="เบอร์ติดต่อ"
+                  name="tel"
                   onChange={handleInputChange}
                 />
               </Form.Group>
@@ -251,7 +250,7 @@ export const GeneralInfoForm = () => {
                 <Form.Control
                   required
                   type="text"
-                  placeholder="รหัสสินค้า"
+                  placeholder="หมายเลขบิล"
                   name="invoiceID"
                   onChange={handleInputChange}
                 />
