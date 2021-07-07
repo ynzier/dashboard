@@ -10,6 +10,8 @@ import {
   Form,
   Button,
   InputGroup,
+  Modal,
+  Alert,
 } from '@themesberg/react-bootstrap';
 import CustomerDataService from '../services/customer.service';
 
@@ -22,98 +24,138 @@ export const GeneralInfoForm = () => {
     serialID: '',
     invoiceID: '',
   };
-  const [purchaseDate, setPurchaseDate] = useState('');
-  const [expireday, setExpireday] = useState('');
+  const [purchaseDate, setPurchaseDate] = useState(moment());
+
+  const [modalShow, setModalShow] = useState(false);
 
   const [warrantyTime, setWarrantyTime] = useState(1);
-
+  const [modelID, setModelID] = useState('SKT-201T');
   const [record, setRecord] = useState(initialRecordState);
+  const [status, setStatus] = useState(0);
   const handleInputChange = event => {
     const { name, value } = event.target;
     setRecord({ ...record, [name]: value });
   };
 
+  const form = document.forms[0];
+  const MyVerticallyCenteredModal = props => {
+    return (
+      <Modal {...props}>
+        <Modal.Header closeButton>
+          <Modal.Title>ข้อมูลการรับประกัน</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>ชื่อ - นามสกุล: {record.name}</p>
+          <p>เบอร์ติดต่อ: {record.tel}</p>
+          <p>ที่อยู่: {record.address}</p>
+          <p>รุ่นสินค้า: {modelID}</p>
+          <p>รหัสสินค้า: {record.serialID}</p>
+          <p>วันที่ซื้อ: {moment(purchaseDate).format('DD/MM/YYYY')}</p>
+          <p>ระยะเวลารับประกัน: {warrantyTime} ปี</p>
+          <p>
+            วันที่สิ้นสุดการรับประกัน:{' '}
+            {moment(purchaseDate).add(warrantyTime, 'y').format('DD/MM/YYYY')}
+          </p>
+          <p>หมายเลขบิล: {record.invoiceID}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={sendData}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
   const handleSubmit = e => {
     e.preventDefault();
+    setModalShow(true);
+  };
 
+  const sendData = () => {
     var data = {
       name: record.name,
       tel: record.tel,
       address: record.address,
-      modelID: record.modelID,
+      modelID: modelID,
       serialID: record.serialID,
       purchaseDate: moment(purchaseDate).format('DD/MM/YYYY'),
+      warrantyTime: warrantyTime,
       expireDate: moment(purchaseDate)
         .add(warrantyTime, 'y')
         .format('DD/MM/YYYY'),
       invoiceID: record.invoiceID,
     };
-
     CustomerDataService.create(data)
-      .then(res => console.log(res))
-      .catch(e => console.log(e));
+      .then(response => {
+        setModalShow(false);
+        setStatus(1);
+        form.reset();
+      })
+      .catch(e => {
+        console.log(e);
+      });
   };
 
   return (
     <Card border="light" className="bg-white shadow-sm mb-4">
       <Card.Body>
         <Form onSubmit={handleSubmit}>
-        <h5 className="my-4">ข้อมูลลูกค้า / Customer Info</h5>
-        <Row>
-          <Col md={6} className="mb-3">
-            <Form.Group id="address">
-              <Form.Label>ชื่อ - นามสกุล</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="ชื่อ"
-                name="name"
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={6} className="mb-3">
-            <Form.Group id="phone">
-              <Form.Label>เบอร์ติดต่อ</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="เบอร์ติดต่อ"
-                name="tel"
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <h5 className="my-4">ที่อยู่ / Address Info</h5>
-        <Row>
-          <Col sm={10} className="mb-4">
-            <Form.Group id="address">
-              <Form.Label>ที่อยู่</Form.Label>
-              <Form.Control
-                required
-                as="textarea"
-                rows={3}
-                placeholder="กรอกที่อยู่"
-                style={{ resize: 'none' }}
-                name="address"
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <h5 className="mb-4">ข้อมูลสินค้า / Goods Info</h5>
-      
+          <h5 className="my-4">ข้อมูลลูกค้า / Customer Info</h5>
+          <Row>
+            <Col md={6} className="mb-3">
+              <Form.Group id="address">
+                <Form.Label>ชื่อ - นามสกุล</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="ชื่อ"
+                  name="name"
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6} className="mb-3">
+              <Form.Group id="phone">
+                <Form.Label>เบอร์ติดต่อ</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="เบอร์ติดต่อ"
+                  name="tel"
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <h5 className="my-4">ที่อยู่ / Address Info</h5>
+          <Row>
+            <Col sm={10} className="mb-4">
+              <Form.Group id="address">
+                <Form.Label>ที่อยู่</Form.Label>
+                <Form.Control
+                  required
+                  as="textarea"
+                  rows={3}
+                  placeholder="กรอกที่อยู่"
+                  style={{ resize: 'none' }}
+                  name="address"
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <h5 className="mb-4">ข้อมูลสินค้า / Goods Info</h5>
+
           <Row>
             <Col md={4} className="mb-3">
               <Form.Group id="modelID">
                 <Form.Label>รุ่นสินค้า</Form.Label>
                 <Form.Select
                   required
-                  name="modelID"
-                  onChange={handleInputChange}>
+                  onChange={e => setModelID(e.target.value)}>
                   <option value="SKT-201T">SKT-201T</option>
                   <option value="SKT-202T">SKT-202T</option>
                   <option value="SKT-203F">SKT-203F</option>
@@ -140,6 +182,7 @@ export const GeneralInfoForm = () => {
                 <Datetime
                   timeFormat={false}
                   onChange={setPurchaseDate}
+                  closeOnSelect={true}
                   renderInput={(props, openCalendar) => (
                     <InputGroup>
                       <InputGroup.Text>
@@ -182,7 +225,7 @@ export const GeneralInfoForm = () => {
               <Form.Group id="birthday">
                 <Form.Label>วันที่สิ้นสุดการรับประกัน</Form.Label>
                 <InputGroup>
-                  <InputGroup.Text style={{backgroundColor:'#F5F8FB'}}>
+                  <InputGroup.Text style={{ backgroundColor: '#F5F8FB' }}>
                     <FontAwesomeIcon icon={faCalendarAlt} />
                   </InputGroup.Text>
                   <Form.Control
@@ -220,7 +263,25 @@ export const GeneralInfoForm = () => {
               Add
             </Button>
           </div>
+          {status === 1 ? (
+            <Alert
+              variant="success"
+              style={{ marginTop: 20 }}
+              onClose={() => setStatus(0)}
+              dismissible>
+              บันทึกข้อมูลเรียบร้อยแล้ว !
+            </Alert>
+          ) : (
+            ''
+          )}
         </Form>
+
+        <MyVerticallyCenteredModal
+          show={modalShow}
+          onHide={() => {
+            setModalShow(false);
+          }}
+        />
       </Card.Body>
     </Card>
   );

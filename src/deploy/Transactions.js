@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faCheck,
-  faCog,
   faHome,
   faSearch,
 } from '@fortawesome/free-solid-svg-icons';
@@ -10,20 +8,122 @@ import {
   Col,
   Row,
   Form,
-  Button,
-  ButtonGroup,
+  Card,
   Breadcrumb,
   InputGroup,
-  Dropdown,
 } from '@themesberg/react-bootstrap';
+import { Table } from 'antd';
+import 'antd/dist/antd.css';
 
-import { TransactionsTable } from '../components/Tables';
+import CustomerDataService from '../services/customer.service';
 
-const App = () => {
+const App = (props) => {
+  const [record, setRecord] = useState([]);
+  const [filterData, setfilterData] = useState();
+  const tutorialsRef = useRef();
+  tutorialsRef.current = record;
+
+  const search = value => {
+    const filterTable = record.filter(o =>
+      Object.keys(o).some(k =>
+        String(o[k]).toLowerCase().includes(value.toLowerCase()),
+      ),
+    );
+
+    setfilterData(filterTable);
+  };
+
+  const openRecord = id => {
+    console.log(id);
+    props.history.push('/record/' + id);
+  };
 
   useEffect(() => {
     document.title = 'รายการทั้งหมด';
+    let mounted = true;
+    CustomerDataService.getAll()
+      .then(res => {
+        if (mounted) {
+          setRecord(res.data);
+        }
+      })
+      .catch(e => {
+        console.log(e);
+      });
+    return () => (mounted = false);
   }, []);
+
+  const header = [
+    {
+      title: 'หมายเลขสินค้า',
+      dataIndex: 'serialID',
+      key: 'serialID',
+      align: 'center',
+    },
+    {
+      title: 'รุ่น',
+      dataIndex: 'modelID',
+      align: 'center',
+      width: 300,
+    },
+    {
+      title: 'ชื่อ',
+      dataIndex: 'name',
+      align: 'center',
+      width: 300,
+    },
+    {
+      title: 'เบอร์โทร',
+      dataIndex: 'tel',
+      align: 'center',
+      width: 300,
+    },
+    {
+      title: 'ที่อยู่',
+      dataIndex: 'address',
+      align: 'center',
+      width: 600,
+    },
+    {
+      title: 'วันที่ซื้อ',
+      dataIndex: 'purchaseDate',
+      align: 'center',
+      width: 300,
+      sorter: (a, b) => a.purchaseDate.localeCompare(b.purchaseDate),
+    },
+    {
+      title: 'รับประกันถึง',
+      dataIndex: 'expireDate',
+      align: 'center',
+      width: 300,
+    },
+    {
+      title: 'Action',
+      key: 'key',
+      dataIndex: 'key',
+      render: (text, record) => {
+        const id = record._id;
+        
+        return (
+          <div>
+            <span
+              onClick={() => {
+                openRecord(id);
+              }}>
+              <i className="far fa-edit action mr-2"></i>
+            </span>
+            <span>&nbsp;&nbsp;</span>
+            <span
+              onClick={() => {
+                console.log(record);
+              }}>
+              <i className="fas fa-trash action"></i>
+            </span>
+          </div>
+        );
+      },
+    },
+  ];
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -37,50 +137,38 @@ const App = () => {
             <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
             <Breadcrumb.Item active>Transactions</Breadcrumb.Item>
           </Breadcrumb>
-          <h4>รายการสินค้าทั้งหมด</h4>
         </div>
       </div>
-
-      <div className="table-settings mb-4">
-        <Row className="justify-content-between align-items-center">
-          <Col xs={8} md={6} lg={3} xl={4}>
-            <InputGroup>
-              <InputGroup.Text>
-                <FontAwesomeIcon icon={faSearch} />
-              </InputGroup.Text>
-              <Form.Control type="text" placeholder="Search" />
-            </InputGroup>
-          </Col>
-          <Col xs={4} md={2} xl={1} className="ps-md-0 text-end">
-            <Dropdown as={ButtonGroup}>
-              <Dropdown.Toggle
-                split
-                as={Button}
-                variant="link"
-                className="text-dark m-0 p-0">
-                <span className="icon icon-sm icon-gray">
-                  <FontAwesomeIcon icon={faCog} />
-                </span>
-              </Dropdown.Toggle>
-              <Dropdown.Menu className="dropdown-menu-xs dropdown-menu-right">
-                <Dropdown.Item className="fw-bold text-dark">
-                  Show
-                </Dropdown.Item>
-                <Dropdown.Item className="d-flex fw-bold">
-                  10{' '}
-                  <span className="icon icon-small ms-auto">
-                    <FontAwesomeIcon icon={faCheck} />
-                  </span>
-                </Dropdown.Item>
-                <Dropdown.Item className="fw-bold">20</Dropdown.Item>
-                <Dropdown.Item className="fw-bold">30</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Col>
-        </Row>
-      </div>
-
-      <TransactionsTable />
+      <Card>
+        <Card.Header>
+          <div className="table-settings mb-4">
+            <Row className="justify-content-between align-items-center">
+              <Col xs={8} md={6} lg={3} xl={4}>
+                <InputGroup>
+                  <InputGroup.Text>
+                    <FontAwesomeIcon icon={faSearch} />
+                  </InputGroup.Text>
+                  <Form.Control
+                    type="text"
+                    placeholder="Search"
+                    onChange={e => search(e.target.value)}
+                  />
+                </InputGroup>
+              </Col>
+            </Row>
+          </div>
+        </Card.Header>
+        <Card.Body
+          className="pt-0"
+          style={{ marginTop: 30, height: '100%', width: '100%' }}>
+          <Table
+            dataSource={filterData == null ? record : filterData}
+            columns={header}
+            rowKey="serialID"
+            pagination={{ pageSize: 20 }}
+          />
+        </Card.Body>
+      </Card>
     </>
   );
 };

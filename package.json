@@ -14,7 +14,7 @@
     "themesberg"
   ],
   "license": "MIT",
-  "homepage": "./",
+  "homepage": ".",
   "bugs": {
     "url": "https://github.com/themesberg/volt-react-dashboard/issues"
   },
@@ -24,7 +24,8 @@
   },
   "version": "1.0.0",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.1",
+    "@ant-design/icons": "^4.6.2",
+    "@fortawesome/fontawesome-free": "^5.15.3",
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-brands-svg-icons": "^5.14.0",
     "@fortawesome/free-regular-svg-icons": "^5.14.0",
@@ -34,8 +35,9 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@themesberg/react-bootstrap": "^1.4.1",
+    "antd": "^4.16.6",
     "axios": "^0.21.1",
-    "bootstrap": "5.0.0-beta1",
+    "bootstrap": "^5.0.0-beta1",
     "chartist": "^0.11.4",
     "chartist-plugin-tooltips-updated": "^0.1.4",
     "moment-timezone": "^0.5.31",
@@ -46,10 +48,13 @@
     "react-datetime": "^3.0.4",
     "react-dom": "^17.0.0",
     "react-github-btn": "^1.2.0",
+    "react-highlight-words": "^0.17.0",
     "react-live": "^2.2.3",
+    "react-preloader-icon": "^1.0.0",
     "react-router-dom": "^5.2.0",
     "react-router-hash-link": "^2.3.1",
     "react-scripts": "^4.0.3",
+    "react-table": "^7.7.0",
     "react-transition-group": "^4.4.1",
     "simplebar-react": "^2.3.0"
   },
@@ -79,5 +84,8 @@
       "not dead",
       "not op_mini all"
     ]
+  },
+  "devDependencies": {
+    "babel-plugin-import": "^1.13.3"
   }
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Switch, Redirect, Link } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import { Routes } from './routes';
 
 // import NotFoundPage from './examples/NotFound';
@@ -17,16 +17,18 @@ import AddItem from './deploy/AddItem';
 import Transactions from './deploy/Transactions';
 
 import AuthService from './services/auth.service';
-
+import Record from './deploy/Record'
 const App = () => {
   const [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser());
+
   useEffect(() => {
     const user = AuthService.getCurrentUser();
-
     if (!currentUser && user) {
       setCurrentUser(user);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   const RouteWithLoader = ({ component: Component, ...rest }) => {
     const [loaded, setLoaded] = useState(false);
 
@@ -48,12 +50,6 @@ const App = () => {
     );
   };
   const RouteWithSidebar = ({ component: Component, ...rest }) => {
-    const [loaded, setLoaded] = useState(false);
-
-    useEffect(() => {
-      const timer = setTimeout(() => setLoaded(true), 1000);
-      return () => clearTimeout(timer);
-    }, []);
 
     return (
       <Route
@@ -61,7 +57,6 @@ const App = () => {
         render={props => (
           <>
             {!currentUser && (window.location = '/')}
-            <Preloader show={loaded ? false : true} />
             <Sidebar />
 
             <main className="content">
@@ -100,6 +95,11 @@ const App = () => {
           path={Routes.AddItem.path}
           component={AddItem}
         />
+         <RouteWithSidebar
+          exact
+          path="/record/:id"
+          component={Record}
+        />       
         <Redirect to={Routes.NotFound.path} />
       </Switch>
     </>

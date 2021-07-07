@@ -7,14 +7,13 @@ import {
   Row,
   Form,
   Button,
-  FormCheck,
   Container,
   InputGroup,
 } from '@themesberg/react-bootstrap';
 import BgImage from '../assets/img/illustrations/signin.svg';
 import AuthService from '../services/auth.service';
 
-const App = ({ setToken }) => {
+const App = () => {
   const [Username, setUsername] = useState('');
   const [Password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -87,16 +86,6 @@ const App = ({ setToken }) => {
                         />
                       </InputGroup>
                     </Form.Group>
-                    <div className="d-flex justify-content-between align-items-center mb-4">
-                      <Form.Check type="checkbox">
-                        <FormCheck.Input id="defaultCheck5" className="me-2" />
-                        <FormCheck.Label
-                          htmlFor="defaultCheck5"
-                          className="mb-0">
-                          Remember me
-                        </FormCheck.Label>
-                      </Form.Check>
-                    </div>
                   </Form.Group>
                   {message && (
                     <div className="form-group">
