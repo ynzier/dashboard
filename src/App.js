@@ -14,10 +14,12 @@ import ServerError from './pages/ServerError';
 //deploy
 import SignIn from './deploy/Signin';
 import AddItem from './deploy/AddItem';
-import Transactions from './deploy/Transactions';
-
+import Dashboard from './deploy/Dashboard';
 import AuthService from './services/auth.service';
-import Record from './deploy/Record'
+import Record from './deploy/Record';
+import ToPDF from './deploy/ToPDF';
+import Setting from './deploy/Setting';
+
 const App = () => {
   const [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser());
 
@@ -42,7 +44,7 @@ const App = () => {
         {...rest}
         render={props => (
           <>
-          {currentUser && (window.location = '/dashboard')}
+            {currentUser && (window.location = '/dashboard')}
             <Preloader show={loaded ? false : true} /> <Component {...props} />
           </>
         )}
@@ -50,7 +52,6 @@ const App = () => {
     );
   };
   const RouteWithSidebar = ({ component: Component, ...rest }) => {
-
     return (
       <Route
         {...rest}
@@ -87,19 +88,21 @@ const App = () => {
         <RouteWithLoader exact path="/" component={SignIn} />
         <RouteWithSidebar
           exact
-          path={Routes.Transactions.path}
-          component={Transactions}
+          path={Routes.Dashboard.path}
+          component={Dashboard}
         />
         <RouteWithSidebar
           exact
           path={Routes.AddItem.path}
           component={AddItem}
         />
-         <RouteWithSidebar
+        <RouteWithSidebar
           exact
-          path="/record/:id"
-          component={Record}
-        />       
+          path={Routes.Setting.path}
+          component={Setting}
+        />
+        <RouteWithSidebar exact path="/record/:id" component={Record} />
+        <Route exact path="/print/:id" component={ToPDF} />
         <Redirect to={Routes.NotFound.path} />
       </Switch>
     </>

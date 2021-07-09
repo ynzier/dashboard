@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faSearch } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -13,13 +13,9 @@ import { Table } from 'antd';
 import 'antd/dist/antd.css';
 
 import CustomerDataService from '../services/customer.service';
-
 const App = props => {
   const [record, setRecord] = useState([]);
   const [filterData, setfilterData] = useState();
-  const tutorialsRef = useRef();
-  tutorialsRef.current = record;
-
   const search = value => {
     const filterTable = record.filter(o =>
       Object.keys(o).some(k =>
@@ -33,6 +29,18 @@ const App = props => {
   const openRecord = id => {
     console.log(id);
     props.history.push('/record/' + id);
+  };
+  const printRecord = id => {
+    props.history.push('/print/' + id);
+  };
+  const refreshList = () => {
+    CustomerDataService.getAll()
+      .then(res => {
+        setRecord(res.data);
+      })
+      .catch(e => {
+        console.log(e);
+      });
   };
 
   useEffect(() => {
@@ -50,6 +58,15 @@ const App = props => {
     return () => (mounted = false);
   }, []);
 
+  const deleteRecord = id => {
+    CustomerDataService.remove(id)
+      .then(response => {
+        refreshList();
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
   const header = [
     {
       title: 'หมายเลขสินค้า',
@@ -112,9 +129,16 @@ const App = props => {
             <span>&nbsp;&nbsp;</span>
             <span
               onClick={() => {
-                console.log(record);
+                deleteRecord(id);
               }}>
               <i className="fas fa-trash action"></i>
+            </span>
+            <span>&nbsp;&nbsp;</span>
+            <span
+              onClick={() => {
+                printRecord(id);
+              }}>
+              <i className="fas fa-print action"></i>
             </span>
           </div>
         );
@@ -160,7 +184,7 @@ const App = props => {
           <Table
             dataSource={filterData == null ? record : filterData}
             columns={header}
-            rowKey="serialID"
+            rowKey="_id"
             pagination={{ pageSize: 20 }}
           />
         </Card.Body>

@@ -9,6 +9,7 @@ import {
   faPlus,
   faSignOutAlt,
   faTasks,
+  faCogs,
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -99,7 +100,7 @@ export default (props = {}) => {
         <Navbar.Brand
           className="me-lg-5"
           as={Link}
-          to={Routes.DashboardOverview.path}>
+          to={Routes.Dashboard.path}>
           <Image src={ReactHero} className="navbar-brand-light" />
         </Navbar.Brand>
         <Navbar.Toggle
@@ -144,12 +145,17 @@ export default (props = {}) => {
               <NavItem
                 title="รายการสินค้า"
                 icon={faTasks}
-                link={Routes.Transactions.path}
+                link={Routes.Dashboard.path}
               />
               <NavItem
                 title="เพิ่มรายการ"
                 icon={faPlus}
                 link={Routes.AddItem.path}
+              />
+              <NavItem
+                title="ตั้งค่าอื่นๆ"
+                icon={faCogs}
+                link={Routes.Setting.path}
               />
 
               <Dropdown.Divider className="my-3 border-indigo" />

@@ -16,12 +16,18 @@ const App = props => {
       .then(response => {
         setData(response.data);
       })
-      .catch(e => {
-        console.log(e);
+      .catch(error => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        alert(resMessage);
       });
   };
   useEffect(() => {
-    getRecord(props.match.params.id)
+    getRecord(props.match.params.id);
   }, [props.match.params.id]);
   return (
     <>
@@ -33,7 +39,7 @@ const App = props => {
             <Breadcrumb.Item active>
               <FontAwesomeIcon icon={faHome} />
             </Breadcrumb.Item>
-            <Breadcrumb.Item href='/dashboard'>Dashboard</Breadcrumb.Item>
+            <Breadcrumb.Item href="/dashboard">Dashboard</Breadcrumb.Item>
             <Breadcrumb.Item active>Edit</Breadcrumb.Item>
           </Breadcrumb>
         </div>

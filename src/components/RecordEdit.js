@@ -28,6 +28,7 @@ export const EditForm = props => {
   const [modelID, setModelID] = useState();
   const [purchaseDate, setPurchaseDate] = useState();
   const [status, setStatus] = useState();
+  const [comment, setComment] = useState();
 
   useEffect(() => {
     if (props.data) {
@@ -41,6 +42,7 @@ export const EditForm = props => {
       setInvoiceID(record.invoiceID);
       setStatus(record.status);
       setAddress(record.address);
+      setComment(record.comment);
     }
   }, [props.data]);
 
@@ -63,6 +65,7 @@ export const EditForm = props => {
             {moment(purchaseDate).add(warrantyTime, 'y').format('DD/MM/YYYY')}
           </p>
           <p>หมายเลขบิล: {invoiceID}</p>
+          <p>หมายเหตุ: {comment}</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={updateCustomer}>
@@ -91,11 +94,10 @@ export const EditForm = props => {
         .add(warrantyTime, 'y')
         .format('DD/MM/YYYY'),
       invoiceID: invoiceID,
+      comment: comment,
     };
     CustomerDataService.update(props.data._id, data)
       .then(response => {
-        console.log(response.data);
-        console.log('The tutorial was updated successfully!');
         setModalShow(false);
       })
       .catch(e => {
@@ -260,6 +262,19 @@ export const EditForm = props => {
                     name="invoiceID"
                     value={invoiceID}
                     onChange={e => setInvoiceID(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={10} className="mb-3">
+                <Form.Group id="comment">
+                  <Form.Label>หมายเหตุ</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    value={comment}
+                    onChange={e => setComment(e.target.value)}
                   />
                 </Form.Group>
               </Col>

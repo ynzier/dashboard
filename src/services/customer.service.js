@@ -34,5 +34,14 @@ const update = (id, data) => {
     },
   });
 };
+
+const remove = id => {
+  return http.delete(`/delete/${id}`, {
+    headers: {
+      'Content-type': 'application/json',
+      'x-access-token': user.accessToken,
+    },
+  });
+};
 // eslint-disable-next-line
-export default { create, getAll, update, get };
+export default { create, getAll, update, remove, get };

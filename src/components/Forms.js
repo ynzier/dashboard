@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment-timezone';
 import Datetime from 'react-datetime';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,6 +15,9 @@ import {
 } from '@themesberg/react-bootstrap';
 import CustomerDataService from '../services/customer.service';
 
+import GoodsDataService from '../services/goods.service';
+
+var getData = [];
 export const GeneralInfoForm = () => {
   const initialRecordState = {
     name: '',
@@ -24,10 +27,10 @@ export const GeneralInfoForm = () => {
     serialID: '',
     invoiceID: '',
   };
+
   const [purchaseDate, setPurchaseDate] = useState(moment());
-
   const [modalShow, setModalShow] = useState(false);
-
+  const [modelData, setmodelData] = useState([]);
   const [warrantyTime, setWarrantyTime] = useState(1);
   const [modelID, setModelID] = useState('SKT-201T');
   const [record, setRecord] = useState(initialRecordState);
@@ -36,6 +39,28 @@ export const GeneralInfoForm = () => {
     const { name, value } = event.target;
     setRecord({ ...record, [name]: value });
   };
+
+  useEffect(() => {
+    document.title = 'ตั้งค่าระบบ';
+    let mounted = true;
+    GoodsDataService.getAll()
+      .then(res => {
+        if (mounted) {
+          getData = res.data;
+          setmodelData(getData);
+        }
+      })
+      .catch(error => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        alert(resMessage);
+      });
+    return () => (mounted = false);
+  }, []);
 
   const form = document.forms[0];
   const MyVerticallyCenteredModal = props => {
@@ -92,8 +117,14 @@ export const GeneralInfoForm = () => {
         setStatus(1);
         form.reset();
       })
-      .catch(e => {
-        console.log(e);
+      .catch(error => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        alert(resMessage);
       });
   };
 
@@ -155,9 +186,12 @@ export const GeneralInfoForm = () => {
                 <Form.Select
                   required
                   onChange={e => setModelID(e.target.value)}>
-                  <option value="SKT-201T">SKT-201T</option>
-                  <option value="SKT-202T">SKT-202T</option>
-                  <option value="SKT-203F">SKT-203F</option>
+                  <option>Select a ModelID</option>
+                  {modelData.map(option => (
+                    <option key={option._id} value={option.modelID}>
+                      {option.modelID}
+                    </option>
+                  ))}
                 </Form.Select>
               </Form.Group>
             </Col>
