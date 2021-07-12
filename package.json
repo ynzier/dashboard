@@ -2,7 +2,7 @@
   "name": "kldashboard",
   "author": "Kunut",
   "license": "MIT",
-  "homepage": ".",
+  "homepage": "http://control.klhealthcare.net",
   "version": "1.0.0",
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
@@ -33,6 +33,7 @@
     "react-scripts": "^4.0.3",
     "react-table": "^7.7.0",
     "react-transition-group": "^4.4.1",
+    "simplebar-react": "^2.3.4",
     "trim-newlines": "^4.0.1"
   },
   "scripts": {

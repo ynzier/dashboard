@@ -1,5 +1,6 @@
 import './ToPDF.css';
 import { PDFExport } from '@progress/kendo-react-pdf';
+import { useHistory } from 'react-router-dom';
 import { useRef, useState, useEffect } from 'react';
 import { Button, ButtonGroup } from '@themesberg/react-bootstrap';
 import CustomerDataService from '../services/customer.service';
@@ -7,7 +8,7 @@ const ToPDF = props => {
   useEffect(() => {
     document.title = 'Export PDF';
   }, []);
-
+  let history = useHistory();
   const pdfExportComponent = useRef(null);
   const handleExportWithComponent = event => {
     pdfExportComponent.current.save();
@@ -46,7 +47,7 @@ const ToPDF = props => {
           <Button
             variant="secondary"
             onClick={() => {
-              window.location = '/dashboard';
+              history.push('/dashboard');
             }}>
             Back
           </Button>

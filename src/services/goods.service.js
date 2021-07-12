@@ -1,7 +1,7 @@
 import axios from 'axios';
 const user = JSON.parse(localStorage.getItem('user'));
 
-const API_URL = 'http://localhost:8080/api/getModel/';
+const API_URL = 'http://api.klhealthcare.net:8080/api/getModel/';
 
 const add = modelID => {
   return axios.post(API_URL + 'add', modelID, {

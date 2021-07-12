@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
 import { Routes } from './routes';
 
 // import NotFoundPage from './examples/NotFound';
@@ -22,6 +22,7 @@ import Setting from './deploy/Setting';
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser());
+  let history = useHistory();
 
   useEffect(() => {
     const user = AuthService.getCurrentUser();
@@ -44,7 +45,7 @@ const App = () => {
         {...rest}
         render={props => (
           <>
-            {currentUser && (window.location = '/dashboard')}
+            {currentUser && history.push('/dashboard')}
             <Preloader show={loaded ? false : true} /> <Component {...props} />
           </>
         )}
@@ -57,7 +58,7 @@ const App = () => {
         {...rest}
         render={props => (
           <>
-            {!currentUser && (window.location = '/')}
+            {!currentUser && history.push('/')}
             <Sidebar />
 
             <main className="content">

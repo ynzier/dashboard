@@ -11,6 +11,7 @@ import {
   faTasks,
   faCogs,
   faTimes,
+  faInbox,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   Nav,
@@ -97,10 +98,7 @@ export default (props = {}) => {
         collapseOnSelect
         variant="dark"
         className="navbar-theme-primary px-4 d-md-none">
-        <Navbar.Brand
-          className="me-lg-5"
-          as={Link}
-          to={Routes.Dashboard.path}>
+        <Navbar.Brand className="me-lg-5" as={Link} to={Routes.Dashboard.path}>
           <Image src={ReactHero} className="navbar-brand-light" />
         </Navbar.Brand>
         <Navbar.Toggle
@@ -150,6 +148,11 @@ export default (props = {}) => {
               <NavItem
                 title="เพิ่มรายการ"
                 icon={faPlus}
+                link={Routes.AddItem.path}
+              />
+              <NavItem
+                title="กล่องข้อความ"
+                icon={faInbox}
                 link={Routes.AddItem.path}
               />
               <NavItem

@@ -26,7 +26,7 @@ const App = () => {
 
     AuthService.login(Username, Password).then(
       () => {
-        window.location = '/dashboard';
+        window.location.reload();
       },
       error => {
         const resMessage =
