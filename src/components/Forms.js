@@ -291,22 +291,27 @@ export const GeneralInfoForm = () => {
               </Form.Group>
             </Col>
           </Row>
-          <div className="mt-3">
-            <Button variant="primary" type="submit">
-              Add
-            </Button>
-          </div>
-          {status === 1 ? (
-            <Alert
-              variant="success"
-              style={{ marginTop: 20 }}
-              onClose={() => setStatus(0)}
-              dismissible>
-              บันทึกข้อมูลเรียบร้อยแล้ว !
-            </Alert>
-          ) : (
-            ''
-          )}
+          <Row>
+            <Col md={1} >
+              <div>
+                <Button variant="primary" type="submit" style={{height:55,width:'100%'}}>
+                  Add
+                </Button>
+              </div>
+            </Col>
+            <Col md={5} >
+              {status === 1 ? (
+                <Alert
+                  variant="success"
+                  onClose={() => setStatus(0)}
+                  dismissible>
+                  บันทึกข้อมูลเรียบร้อยแล้ว !
+                </Alert>
+              ) : (
+                ''
+              )}
+            </Col>
+          </Row>
         </Form>
 
         <MyVerticallyCenteredModal
