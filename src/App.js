@@ -102,8 +102,19 @@ const App = () => {
           path={Routes.Setting.path}
           component={Setting}
         />
-        <RouteWithSidebar exact path="/record/:id" component={Record} />
-        <Route exact path="/print/:id" component={ToPDF} />
+        <RouteWithSidebar
+          exact
+          path={Routes.Setting.path}
+          component={Setting}
+        />
+        <RouteWithSidebar exact path={Routes.Record.path} component={Record} />
+        <RouteWithSidebar exact path={Routes.Tickets.path} component={Record} />
+        <RouteWithSidebar
+          exact
+          path={Routes.TicketID.path}
+          component={Record}
+        />
+        <Route exact path={Routes.ToPDF.path} component={ToPDF} />
         <Redirect to={Routes.NotFound.path} />
       </Switch>
     </>
