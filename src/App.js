@@ -19,7 +19,8 @@ import AuthService from './services/auth.service';
 import Record from './deploy/Record';
 import ToPDF from './deploy/ToPDF';
 import Setting from './deploy/Setting';
-
+import Tickets from './deploy/Tickets';
+import Ticket from './deploy/Ticket';
 const App = () => {
   const [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser());
   let history = useHistory();
@@ -108,11 +109,15 @@ const App = () => {
           component={Setting}
         />
         <RouteWithSidebar exact path={Routes.Record.path} component={Record} />
-        <RouteWithSidebar exact path={Routes.Tickets.path} component={Record} />
+        <RouteWithSidebar
+          exact
+          path={Routes.Tickets.path}
+          component={Tickets}
+        />
         <RouteWithSidebar
           exact
           path={Routes.TicketID.path}
-          component={Record}
+          component={Ticket}
         />
         <Route exact path={Routes.ToPDF.path} component={ToPDF} />
         <Redirect to={Routes.NotFound.path} />

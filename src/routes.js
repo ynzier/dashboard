@@ -9,7 +9,7 @@ export const Routes = {
   Dashboard: { path: '/dashboard' },
   AddItem: { path: '/dashboard/additem' },
   Setting: { path: '/dashboard/setting' },
-  Record: { path: 'record/:id' },
+  Record: { path: '/record/:id' },
   ToPDF: { path: '/print/:id' },
   Tickets: { path: '/dashboard/tickets' },
   TicketID: { path: '/ticket/:id' },

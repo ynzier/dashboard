@@ -153,7 +153,7 @@ export default (props = {}) => {
               <NavItem
                 title="กล่องข้อความ"
                 icon={faInbox}
-                link={Routes.AddItem.path}
+                link={Routes.Tickets.path}
               />
               <NavItem
                 title="ตั้งค่าอื่นๆ"
