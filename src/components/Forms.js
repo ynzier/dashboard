@@ -31,6 +31,8 @@ export const GeneralInfoForm = () => {
   const [purchaseDate, setPurchaseDate] = useState(moment());
   const [modalShow, setModalShow] = useState(false);
   const [modelData, setmodelData] = useState([]);
+  const [itemCount, setItemCount] = useState(1);
+  const [massSerial, setMassSerial] = useState();
   const [warrantyTime, setWarrantyTime] = useState(1);
   const [modelID, setModelID] = useState('SKT-201T');
   const [record, setRecord] = useState(initialRecordState);
@@ -73,8 +75,15 @@ export const GeneralInfoForm = () => {
           <p>ชื่อ - นามสกุล: {record.name}</p>
           <p>เบอร์ติดต่อ: {record.tel}</p>
           <p>ที่อยู่: {record.address}</p>
+          <p>จำนวนสินค้า: {itemCount} ชุด</p>
           <p>รุ่นสินค้า: {modelID}</p>
-          <p>รหัสสินค้า: {record.serialID}</p>
+          {massSerial ? (
+            <>
+              <p>รหัสล๊อต: {record.serialID}</p>
+            </>
+          ) : (
+            <p>รหัสสินค้า: {record.serialID}</p>
+          )}
           <p>วันที่ซื้อ: {moment(purchaseDate).format('DD/MM/YYYY')}</p>
           <p>ระยะเวลารับประกัน: {warrantyTime} ปี</p>
           <p>
@@ -110,7 +119,12 @@ export const GeneralInfoForm = () => {
         .add(warrantyTime, 'y')
         .format('DD/MM/YYYY'),
       invoiceID: record.invoiceID,
+      itemCount: itemCount,
     };
+    if (massSerial) {
+      var SerialArray = massSerial.replace(/\n/g, ' ').split(' ');
+      Object.assign(data, { SerialArray: SerialArray });
+    }
     CustomerDataService.create(data)
       .then(response => {
         setModalShow(false);
@@ -182,32 +196,99 @@ export const GeneralInfoForm = () => {
           <Row>
             <Col md={4} className="mb-3">
               <Form.Group id="modelID">
-                <Form.Label>รุ่นสินค้า</Form.Label>
-                <Form.Select
-                  required
-                  onChange={e => setModelID(e.target.value)}>
-                  <option>Select a ModelID</option>
-                  {modelData.map(option => (
-                    <option key={option._id} value={option.modelID}>
-                      {option.modelID}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-            </Col>
-            <Col md={6} className="mb-3">
-              <Form.Group id="ItemNo">
-                <Form.Label>รหัสสินค้า (Serial No.)</Form.Label>
+                <Form.Label>จำนวนสินค้า</Form.Label>
                 <Form.Control
                   required
-                  type="text"
-                  placeholder="รหัสสินค้า"
-                  name="serialID"
-                  onChange={handleInputChange}
+                  type="number"
+                  defaultValue="1"
+                  name="itemCount"
+                  onChange={e => setItemCount(e.target.value)}
                 />
               </Form.Group>
             </Col>
           </Row>
+          {itemCount <= 1 ? (
+            <Row>
+              <Col md={4} className="mb-3">
+                <Form.Group id="modelID">
+                  <Form.Label>รุ่นสินค้า</Form.Label>
+                  <Form.Select
+                    required
+                    onChange={e => setModelID(e.target.value)}>
+                    <option>Select a ModelID</option>
+                    {modelData.map(option => (
+                      <option key={option._id} value={option.modelID}>
+                        {option.modelID}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col md={6} className="mb-3">
+                <Form.Group id="ItemNo">
+                  <Form.Label>รหัสสินค้า (Serial No.)</Form.Label>
+                  <Form.Control
+                    required
+                    type="text"
+                    placeholder="รหัสสินค้า"
+                    name="serialID"
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          ) : (
+            <>
+              <Row>
+                <Col md={4} className="mb-3">
+                  <Form.Group id="modelID">
+                    <Form.Label>รุ่นสินค้า</Form.Label>
+                    <Form.Select
+                      required
+                      onChange={e => setModelID(e.target.value)}>
+                      <option>Select a ModelID</option>
+                      {modelData.map(option => (
+                        <option key={option._id} value={option.modelID}>
+                          {option.modelID}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col md={6} className="mb-3">
+                  <Form.Group id="ItemNo">
+                    <Form.Label>รหัสล๊อต (Lot No.)</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      placeholder="รหัสสินค้า"
+                      name="serialID"
+                      onChange={handleInputChange}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={12} className="mb-3">
+                  <Form.Group id="ItemNo">
+                    <Form.Label>
+                      รหัสสินค้าทั้งหมด (Serial No.)
+                      <span style={{ color: 'red' }}>*เว้นบรรทัดใหม่</span>
+                    </Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      as="textarea"
+                      rows={3}
+                      style={{ resize: 'none' }}
+                      onChange={e => setMassSerial(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </>
+          )}
+
           <Row className="align-items-center">
             <Col md={3} className="mb-3">
               <Form.Group id="birthday">
@@ -292,14 +373,17 @@ export const GeneralInfoForm = () => {
             </Col>
           </Row>
           <Row>
-            <Col md={1} >
+            <Col md={1}>
               <div>
-                <Button variant="primary" type="submit" style={{height:55,width:'100%'}}>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  style={{ height: 55, width: '100%' }}>
                   Add
                 </Button>
               </div>
             </Col>
-            <Col md={5} >
+            <Col md={5}>
               {status === 1 ? (
                 <Alert
                   variant="success"

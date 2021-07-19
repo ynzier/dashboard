@@ -15,7 +15,11 @@ import {
 } from '@themesberg/react-bootstrap';
 import CustomerDataService from '../services/customer.service';
 
+import GoodsDataService from '../services/goods.service';
+
 var record = [];
+
+var getData = [];
 
 export const EditForm = props => {
   const [modalShow, setModalShow] = useState(false);
@@ -29,8 +33,26 @@ export const EditForm = props => {
   const [purchaseDate, setPurchaseDate] = useState();
   const [status, setStatus] = useState();
   const [comment, setComment] = useState();
+  const [itemCount, setItemCount] = useState();
+  const [massSerial, setMassSerial] = useState([]);
+  const [modelData, setmodelData] = useState([]);
 
   useEffect(() => {
+    GoodsDataService.getAll()
+      .then(res => {
+        getData = res.data;
+        setmodelData(getData);
+      })
+      .catch(error => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        alert(resMessage);
+      });
+
     if (props.data) {
       record = props.data;
       setName(record.name);
@@ -43,6 +65,8 @@ export const EditForm = props => {
       setStatus(record.status);
       setAddress(record.address);
       setComment(record.comment);
+      setMassSerial(record.SerialArray);
+      setItemCount(record.itemCount);
     }
   }, [props.data]);
 
@@ -53,19 +77,25 @@ export const EditForm = props => {
           <Modal.Title>ข้อมูลการรับประกัน</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>ชื่อ - นามสกุล: {name}</p>
-          <p>เบอร์ติดต่อ: {tel}</p>
-          <p>ที่อยู่: {address}</p>
+          <p>ชื่อ - นามสกุล: {record.name}</p>
+          <p>เบอร์ติดต่อ: {record.tel}</p>
+          <p>ที่อยู่: {record.address}</p>
+          <p>จำนวนสินค้า: {itemCount} ชุด</p>
           <p>รุ่นสินค้า: {modelID}</p>
-          <p>รหัสสินค้า: {serialID}</p>
+          {massSerial ? (
+            <>
+              <p>รหัสล๊อต: {record.serialID}</p>
+            </>
+          ) : (
+            <p>รหัสสินค้า: {record.serialID}</p>
+          )}
           <p>วันที่ซื้อ: {moment(purchaseDate).format('DD/MM/YYYY')}</p>
           <p>ระยะเวลารับประกัน: {warrantyTime} ปี</p>
           <p>
             วันที่สิ้นสุดการรับประกัน:{' '}
             {moment(purchaseDate).add(warrantyTime, 'y').format('DD/MM/YYYY')}
           </p>
-          <p>หมายเลขบิล: {invoiceID}</p>
-          <p>หมายเหตุ: {comment}</p>
+          <p>หมายเลขบิล: {record.invoiceID}</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={updateCustomer}>
@@ -95,7 +125,12 @@ export const EditForm = props => {
         .format('DD/MM/YYYY'),
       invoiceID: invoiceID,
       comment: comment,
+      itemCount: itemCount,
     };
+    if (massSerial) {
+      var SerialArray = massSerial.replace(/\n/g, ' ').split(' ');
+      Object.assign(data, { SerialArray: SerialArray });
+    }
     CustomerDataService.update(props.data._id, data)
       .then(response => {
         setModalShow(false);
@@ -156,35 +191,94 @@ export const EditForm = props => {
               </Col>
             </Row>
             <h5 className="mb-4">ข้อมูลสินค้า / Goods Info</h5>
+            {!massSerial[0] ? (
+              <>
+                <Row>
+                  <Col md={4} className="mb-3">
+                    <Form.Group id="modelID">
+                      <Form.Label>รุ่นสินค้า</Form.Label>
+                      <Form.Select
+                        required
+                        value={modelID}
+                        onChange={e => setModelID(e.target.value)}>
+                        <option>Select a ModelID</option>
+                        {modelData.map(option => (
+                          <option key={option._id} value={option.modelID}>
+                            {option.modelID}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  <Col md={6} className="mb-3">
+                    <Form.Group id="ItemNo">
+                      <Form.Label>รหัสสินค้า (Serial No.)</Form.Label>
+                      <Form.Control
+                        required
+                        type="text"
+                        placeholder="รหัสสินค้า"
+                        name="serialID"
+                        value={serialID}
+                        onChange={e => setSerialID(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </>
+            ) : (
+              <>
+                <Row>
+                  <Col md={4} className="mb-3">
+                    <Form.Group id="modelID">
+                      <Form.Label>รุ่นสินค้า</Form.Label>
+                      <Form.Select
+                        required
+                        value={modelID}
+                        onChange={e => setModelID(e.target.value)}>
+                        <option>Select a ModelID</option>
+                        {modelData.map(option => (
+                          <option key={option._id} value={option.modelID}>
+                            {option.modelID}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  <Col md={6} className="mb-3">
+                    <Form.Group id="ItemNo">
+                      <Form.Label>รหัสล๊อต (Lot No.)</Form.Label>
+                      <Form.Control
+                        required
+                        type="text"
+                        value={serialID}
+                        name="serialID"
+                        onChange={e => setSerialID(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={12} className="mb-3">
+                    <Form.Group id="ItemNo">
+                      <Form.Label>
+                        รหัสสินค้าทั้งหมด (Serial No.)
+                        <span style={{ color: 'red' }}>*เว้นบรรทัดใหม่</span>
+                      </Form.Label>
+                      <Form.Control
+                        required
+                        type="text"
+                        as="textarea"
+                        rows={3}
+                        value={massSerial.toString().split(',').join(' ')}
+                        style={{ resize: 'none' }}
+                        onChange={e => setMassSerial(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </>
+            )}
 
-            <Row>
-              <Col md={4} className="mb-3">
-                <Form.Group id="modelID">
-                  <Form.Label>รุ่นสินค้า</Form.Label>
-                  <Form.Select
-                    required
-                    value={modelID}
-                    onChange={e => setModelID(e.target.value)}>
-                    <option value="SKT-201T">SKT-201T</option>
-                    <option value="SKT-202T">SKT-202T</option>
-                    <option value="SKT-203F">SKT-203F</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col md={6} className="mb-3">
-                <Form.Group id="ItemNo">
-                  <Form.Label>รหัสสินค้า (Serial No.)</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    placeholder="รหัสสินค้า"
-                    name="serialID"
-                    value={serialID}
-                    onChange={e => setSerialID(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
             <Row className="align-items-center">
               <Col md={3} className="mb-3">
                 <Form.Group id="birthday">
